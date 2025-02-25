@@ -1,17 +1,22 @@
 spring:
   application:
     name: secutiry
-  # DB ??
+  # DB 설정
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # url=jdbc:mysql://[IP]:[????]/[DB??]?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
     url: jdbc:mysql://localhost:3307/grade_db?useSSL=false&serverTimezone=Asia/Seoul
     username: grade
     password: grade1234
-  # ??? ??(Thymeleaf) ??
+  # 템플릿 엔진(Thymeleaf) 설정
   thymeleaf:
     cache: false
-  # JPA ??
+  # 보안 설정
+  security:
+    user:
+      name: admin
+      password: 1234
+  # JPA 설정
   jpa:
     hibernate:
       ddl-auto: update
@@ -22,6 +27,23 @@ spring:
         use_sql_comments: true
         jdbc:
           time_zone: Asia/Seoul
+
+---
+logging:
+  level:
+    root: INFO
+    org.springframework:
+        web: DEBUG
+        security: DEBUG
+    org.hibernate:
+        SQL: DEBUG
+        type: TRACE
+  file:
+    name: logs/app-dev
+  logback:
+    rollingpolicy:
+      max-history: 60
+      total-size-cap: 3GB
 
 ---
 server:
