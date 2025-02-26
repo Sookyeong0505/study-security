@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <!-- 변수 정의 -->
-    <property name="LOG_PATH" value="logs/" />
-    <property name="CONSOLE_LOG_FILE_NAME" value="console" />
-    <property name="ERROR_LOG_FILE_NAME" value="err" />
 
     <!-- 컬러 로깅을 위한 컨버터 설정 -->
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
     <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
     <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
 
-    <!-- 컬러 패턴 정의 -->
+    <!-- 경로 변수 -->
+    <property name="LOG_PATH" value="logs/" />
+    <property name="CONSOLE_LOG_FILE_NAME" value="console" />
+    <property name="ERROR_LOG_FILE_NAME" value="err" />
+    <!-- rollingPolicy 변수 -->
+    <property name="maxHistory" value="30"/>
+    <property name="maxFileSize" value="10MB"/>
+    <property name="totalSizeCap" value="1GB"/>
+    <!-- 패턴 변수 -->
+    <property name="filePattern" value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [${LOG_LEVEL_PATTERN:-%5p}] %logger[%method:%line] - %msg%n"/>
+    <!-- 컬러 패턴 -->
     <property name="CONSOLE_COLOR_PATTERN"
               value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}" />
-
     <!-- 기본 패턴 정의 -->
-    <property name="CONSOLE_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n" />
+    <property name="FILE_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level [%thread] %logger{36} - %msg%n" />
 
-    <!-- 콘솔 출력 설정 (컬러 하이라이트) -->
+    <!-- 콘솔 출력 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <charset>UTF-8</charset>
@@ -25,44 +30,59 @@
         </encoder>
     </appender>
 
-    <!-- 모든 로그를 기록하는 파일 설정 -->
+    <!-- 테스트 파일 -->
+    <appender name="FILE_TEST" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}file-pattern.log</file>
+        <encoder>
+            <pattern>${filePattern}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}file-pattern.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>${maxHistory}</maxHistory>
+            <maxFileSize>${maxFileSize}</maxFileSize>
+            <totalSizeCap>${totalSizeCap}</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 로그 파일 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}${CONSOLE_LOG_FILE_NAME}.log</file>
         <encoder>
-            <pattern>${CONSOLE_PATTERN}</pattern>
+            <pattern>${FILE_PATTERN}</pattern>
             <charset>UTF-8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${LOG_PATH}${CONSOLE_LOG_FILE_NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>10MB</maxFileSize>
-            <maxHistory>10</maxHistory>
-            <totalSizeCap>100MB</totalSizeCap>
+            <maxHistory>${maxHistory}</maxHistory>
+            <maxFileSize>${maxFileSize}</maxFileSize>
+            <totalSizeCap>${totalSizeCap}</totalSizeCap>
         </rollingPolicy>
     </appender>
 
-    <!-- 에러 로그만 기록하는 파일 설정 -->
+    <!-- 에러 로그 파일 -->
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
         <file>${LOG_PATH}${ERROR_LOG_FILE_NAME}.log</file>
         <encoder>
-            <pattern>${CONSOLE_PATTERN}</pattern>
+            <pattern>${FILE_PATTERN}</pattern>
             <charset>UTF-8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${LOG_PATH}${ERROR_LOG_FILE_NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>10MB</maxFileSize>
-            <maxHistory>10</maxHistory>
-            <totalSizeCap>100MB</totalSizeCap>
+            <maxHistory>${maxHistory}</maxHistory>
+            <maxFileSize>${maxFileSize}</maxFileSize>
+            <totalSizeCap>${totalSizeCap}</totalSizeCap>
         </rollingPolicy>
-        <!-- 에러 레벨만 필터링 -->
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>ERROR</level>
-        </filter>
     </appender>
 
-    <!-- 루트 로거 설정 -->
+    <!-- 루트 설정 -->
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
+        <appender-ref ref="FILE_TEST" />
         <appender-ref ref="ERROR_FILE" />
     </root>
 </configuration>
