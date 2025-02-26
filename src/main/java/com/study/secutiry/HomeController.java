@@ -10,12 +10,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        String name = "Home";
-        log.trace(name);
-        log.debug(name);
-        log.info(name);
-        log.warn(name);
-        log.error(name);
+        log.info("Main Page");
         return "home";
     }
 }

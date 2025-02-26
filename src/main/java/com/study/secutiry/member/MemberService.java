@@ -5,10 +5,12 @@ import com.study.secutiry.jpa.entity.MemberEntity;
 import com.study.secutiry.member.dto.MemberResponse;
 import com.study.secutiry.member.dto.MemberSignupRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -18,6 +20,8 @@ public class MemberService {
 
     @Transactional
     public MemberResponse signup(MemberSignupRequest request) {
+        log.debug("[MemberService#signup] request={}", request);
+
         // 중복 검사
         if (memberRepository.existsByUsername(request.username())) {
             throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
@@ -38,6 +42,7 @@ public class MemberService {
                 .build();
 
         MemberEntity savedMember = memberRepository.save(member);
+        log.debug("[MemberService#signup] savedMember={}", savedMember);
 
         return new MemberResponse(savedMember);
     }

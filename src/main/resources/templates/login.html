@@ -3,23 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <title>로그인</title>
+    <style>
+        .error-message {
+            color: red;
+            margin-bottom: 15px;
+        }
+        .success-message {
+            color: green;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-<h1>로그인</h1>
-<div th:if="${param.error}">
-    <p style="color: red;">아이디 또는 비밀번호가 잘못되었습니다.</p>
-</div>
-<form th:action="@{/login}" method="post">
-    <div>
-        <label for="username">아이디</label>
-        <input type="text" id="username" name="username" required>
+    <h1>로그인</h1>
+
+    <div th:if="${error}" class="error-message" th:text="${errorMessage}">
+        아이디 또는 비밀번호가 잘못되었습니다.
     </div>
-    <div>
-        <label for="password">비밀번호</label>
-        <input type="password" id="password" name="password" required>
+
+    <div th:if="${registered}" class="success-message" th:text="${registeredMessage}">
+        회원가입이 완료되었습니다. 로그인해주세요.
     </div>
-    <button type="submit">로그인</button>
-</form>
-<p>계정이 없으신가요? <a th:href="@{/signup}">회원가입</a></p>
+
+    <form th:action="@{/login-process}" method="post">
+        <div class="form-group">
+            <label for="username">아이디</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="remember-me"> 로그인 상태 유지
+            </label>
+        </div>
+        <button type="submit">로그인</button>
+    </form>
+
+    <p>계정이 없으신가요? <a th:href="@{/signup}">회원가입</a></p>
 </body>
 </html>
