@@ -4,7 +4,7 @@ spring:
   # DB 설정
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/grade_db?useSSL=false&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3307/grade_db?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
     username: grade
     password: grade1234
   # 템플릿 엔진(Thymeleaf) 설정
