@@ -26,6 +26,7 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     private final MemberRepository memberRepository;
     private static final int MAX_ATTEMPTS = 5;
 
+    @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
 

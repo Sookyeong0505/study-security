@@ -34,11 +34,11 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login-process")
+                        .defaultSuccessUrl("/", true)
                         .successHandler(loginSuccessHandler)
                         .failureHandler(loginFailureHandler)
                         .usernameParameter("username")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
